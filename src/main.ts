@@ -1,17 +1,23 @@
 import 'phaser';
 
-import TestScene from './scenes/PlayScene';
+import LoadScene from './scenes/LoadScene';
 
-const config:GameConfig = {
+const config = {
     type: Phaser.AUTO,
     parent: 'content',
-    width: 640,
-    height: 480,
-    resolution: 1, 
-    backgroundColor: "#EDEEC9",
+    width: window.outerWidth,
+    height: window.outerHeight,
+    resolution: 1,
+    scale: {
+      mode: Phaser.Scale.FIT,
+    },
+    render: {
+      pixelArt: true,
+    },
     scene: [
-      TestScene
-    ]
+      LoadScene,
+    ],
+    background: '#4e465e'
 };
 
 new Phaser.Game(config);

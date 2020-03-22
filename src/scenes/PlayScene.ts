@@ -1,46 +1,53 @@
-class TestScene extends Phaser.Scene {
-	player: Phaser.GameObjects.Sprite;
-	cursors: any;
+import { CST } from '../CST';
+
+class PlayScene extends Phaser.Scene {
+	spaceship: Phaser.GameObjects.Image;
+	score: number;
+	countText: any;
+	keyboard: any;
 
 	constructor() {
     super({
-			key: 'TestScene'
+			key: CST.scenes.play
 		});
 	}
 	
 	preload() {
-		this.load.tilemapTiledJSON('map', '/assets/tilemaps/desert.json');
-		this.load.image('Desert', '/assets/tilemaps/tmw_desert_spacing.png');
-		this.load.image('player', '/assets/sprites/mushroom.png');
 	}
 
 	create() {
-		var map:Phaser.Tilemaps.Tilemap = this.make.tilemap({ key: 'map' });
-		var tileset:Phaser.Tilemaps.Tileset = map.addTilesetImage('Desert');
-		var layer:Phaser.Tilemaps.StaticTilemapLayer = map.createStaticLayer(0, tileset, 0, 0);
+		this.score = 0;
 
-		this.player = this.add.sprite(100, 100, 'player');
-		this.cursors = this.input.keyboard.createCursorKeys();
+		this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2, 'stars').setScale(6).setDepth(0);
+		this.countText = this.add.text(50, this.game.renderer.height - 70, `score: ${this.score}`, {
+			font: '20px'
+		})
 
-		this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-    this.cameras.main.startFollow(this.player, false);
+		this.spaceship = this.add.sprite(this.game.renderer.width / 2, this.game.renderer.height - 200, 'spaceship', 2).setScale(.1).setDepth(1);
+		this.spaceship.setInteractive();
+
+		this.keyboard = this.input.keyboard.addKeys('W, A, S, D, F');
 	}
 
 	update(time: number, delta:number) {
-		this.player.angle += 1;
-		if (this.cursors.left.isDown) {
-			this.player.x -= 5;
+		if(this.keyboard.D.isDown === true) {
+			this.spaceship.x += 364 * (delta / 1000);
 		}
-		if (this.cursors.right.isDown) {
-			this.player.x += 5;
+		if(this.keyboard.S.isDown === true) {
+			this.spaceship.y += 364 * (delta / 1000);
 		}
-		if (this.cursors.down.isDown) {
-			this.player.y += 5;
+		if(this.keyboard.A.isDown === true) {
+			this.spaceship.x -= 364 * (delta / 1000);
 		}
-		if (this.cursors.up.isDown) {
-			this.player.y -= 5;
+		if(this.keyboard.W.isDown === true) {
+			this.spaceship.y -= 364 * (delta / 1000);
 		}
+		if(this.keyboard.F.isDown === true) {
+			this.score += 100;
+			this.countText.setText(`score: ${this.score}`);
+		}
+		
 	}
 }
 
-export default TestScene;
+export default PlayScene;
